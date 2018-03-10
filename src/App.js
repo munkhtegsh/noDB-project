@@ -3,6 +3,7 @@ import './App.css';
 import axios from 'axios';
 import _ from 'underscore';
 import Player from './controllers/Player';
+import Api_Handler from './controllers/Api_Handler';
 
 class App extends Component {
   constructor() {
@@ -21,11 +22,15 @@ class App extends Component {
   }
 
   componentDidMount() {
-      axios.get(`${this.state.localURL}`)
-      .then(( result ) => {
-        let players = result.data;
-        this.setState({ players })
+    Api_Handler.get().then((players) => {
+      this.setState({ players })
     });
+
+      // axios.get(`${this.state.localURL}`)
+      // .then(( result ) => {
+      //   let players = result.data;
+      //   this.setState({ players })
+      // });
   }
 
   addPlayer() {    
@@ -68,7 +73,8 @@ class App extends Component {
         />
       )
     })
-    
+    console.log(this.state.players)
+
     return (
       <div>
         <input type="text" onChange={(e) => this.setState({firstName: e.target.value})} placeholder="Firstname"/>
