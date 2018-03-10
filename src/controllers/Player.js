@@ -5,7 +5,7 @@ export default class Player extends React.Component {
         super(props);
         this.state = {
             name: this.props.name,
-            team_name: this.props.team_name,
+            team: this.props.team,
             points_per_game: this.props.points_per_game,
             rebounds_per_game: this.props.points_per_game
         };
@@ -18,41 +18,47 @@ export default class Player extends React.Component {
 
     changeName(e) {
         let name = e.target.value;
-        this.setState({name})
+        this.setState({ name })
     }
 
     changeTeam(e) {
-        let team_name = e.target.value;
-        this.setState({team_name})
+        let team = e.target.value;
+        this.setState({ team })
     }
 
     changePoints(e) {
         let points_per_game = e.target.value;
-        this.setState({points_per_game})
+        this.setState({ points_per_game })
     }
 
     changeRebounds(e) {
         let rebounds_per_game = e.target.value;
-        this.setState({rebounds_per_game})
+        this.setState({ rebounds_per_game })
     }
     
     updateStats(e) {
-        
+        let { name, team, points_per_game, rebounds_per_game } = this.state;
+        let player = {
+            name,
+            team,
+            points_per_game,
+            rebounds_per_game
+        };
+
+        this.props.updatePlayer(this.props.id, player);
     }
 
     render() {
         return (
             <div>
-                <form action="" onSubmit={this.updateStats}>
-                    <img src={this.props.pic} width="200" alt="player image"/>
-                    <br/>
-                    <input type="text" value={this.state.name} onChange={this.changeName}/>
-                    <br/>
-                    <button type="Submit">Update</button>
-                </form>
+                <img src={this.props.img} width="100" alt="player image"/>
+                <br/>
+                <input type="text" value={this.state.name} onChange={this.changeName}/>
+                <br/>
+                <button onClick={this.updateStats}>Update</button>
+                <button onClick={() => this.props.removePlayer(this.props.id)}>Remove</button>
                 
                 {/* <button type="Submit" removePlayer={this.props.removePlayer(this.props.id)}>Update</button> */}
-
             </div>
         )
     }

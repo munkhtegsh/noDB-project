@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 import './App.css';
 import axios from 'axios';
 import _ from 'underscore';
@@ -10,106 +9,72 @@ class App extends Component {
     super();
     this.state = {
       id: 0,
-      players: [],
-      data: [],
+      players: [],   
       firstName: '',
       lastName: '',
-      localURL: 'http://localhost:3000/api/players',
-      baseURL: 'https://nba-players.herokuapp.com/players-stats',
+      localURL: 'http://localhost:3005/api/players',
       img: 'https://nba-players.herokuapp.com/players'
     };
     this.addPlayer = this.addPlayer.bind(this);
     this.updatePlayer = this.updatePlayer.bind(this);
+    this.removePlayer = this.removePlayer.bind(this);
   }
 
   componentDidMount() {
-    // axios.get(`${this.state.baseURL}`)
       axios.get(`${this.state.localURL}`)
-      .then((result) => {
-        console.log('HIT')
-        let data = result.data
-        this.setState({ data })
+      .then(( result ) => {
+        let players = result.data;
+        this.setState({ players })
     });
   }
 
   addPlayer() {    
-    if (this.state.firstName !== '', this.state.lastName !== '') {
-      let {firstName, lastName} = this.state;
-      firstName = firstName.toLowerCase(); //never forget includes is case sensitive
-      let playerInfo = this.state.data.filter((player, i) => player.name.toLowerCase().includes(firstName));
-      console.log(playerInfo)
-      let {name, team_name, points_per_game, rebounds_per_game} = playerInfo[0];
-      let playerStats = {
-        id: this.state.id,
-        name,
-        team_name,
-        points_per_game,
-        rebounds_per_game,
-        pic: `${this.state.img}/${lastName}/${firstName}`
-      }
-      let players = this.state.players.slice(0);
-      players.push(playerStats)
-      this.setState((prevState) => {
-        let id = prevState.id + 1;
-        return {players, id}
-      })
-    }
-  }
-
-  updatePlayer(id, obj) {
-    this.state.players.forEach((player, i) => {
-      if (player.id === id) {
-        player.id = player.id;
-        player.name = obj.name || player.name;
-        player.team_name = obj.team_name || player.team_name;
-        player.rebounds_per_game = obj.rebounds_per_game || player.rebounds_per_game;
-        player.points_per_game = obj.points_per_game || player.points_per_game;
-        player.pic = player.pic
-      }
+    let firstName = this.state.firstName;
+    let lastName = this.state.lastName;
+    axios.post(`${this.state.localURL}`, {
+      firstName,
+      lastName
     })
+      .then((res) => {
+        let players = res.data;
+        this.setState({ players });
+      });
   }
 
-  // removePlayer(id) {
-  //   this.state.players.forEach((player, i) => {
-  //     if (player.id === id) {
-  //       this.state.players.splice(i, 1);
-  //     }
-  //   })
-  // }
+  updatePlayer( id, playerInfo ) {
+    axios.put(`${this.state.localURL}/${id}`, playerInfo)
+      .then((res) => {
+        let players = res.data;
+        this.setState({ players })
+      });
+  }
+
+  removePlayer(id) {
+    axios.delete(`${this.state.localURL}/${id}`)
+      .then((res) => {
+        let players = res.data;
+        this.setState({ players })
+      })
+  }
 
   render() {
-    let playersStats = this.state.players.map((playerStats, i) => {
+    let players = this.state.players.map(( player, i ) => {
       return (
-        <div>
-          <Player key={playerStats.id}
-                  id={playerStats.id}
-                  pic={playerStats.pic}
-                  name={playerStats.name}
-                  team_name={playerStats.team_name}
-                  rebounds_per_game={playerStats.rebounds_per_game}
-                  points_per_game={playerStats.points_per_game}
-                  updatePlayer={this.updatePlayer}
-                  // removePlayer={this.removePlayer}
-          />
-        </div>
+        <Player img={ player.img }
+                name={ player.name }
+                updatePlayer={ this.updatePlayer }
+                removePlayer={ this.removePlayer }
+                id={ player.id }
+        />
       )
     })
     
     return (
-      <div className="container">
-        <div className="main img-fluid">
-            <div className="header">
-              <input type="text" ref="Fi" onChange={(e) => this.setState({firstName: e.target.value})} placeholder="Firstname"/>
-              <input type="text" ref="firstName" onChange={(e) => this.setState({lastName: e.target.value})} placeholder="Lastname"/>
-              {
-                this.state.data.length === 0 
-                ? 
-                <button  onClick={this.addPlayer} disabled>Add</button>
-                : <button  onClick={this.addPlayer}>Add</button>
-              }
-            </div>
-            {playersStats}
-        </div>
+      <div>
+        <input type="text" onChange={(e) => this.setState({firstName: e.target.value})} placeholder="Firstname"/>
+        <input type="text" onChange={(e) => this.setState({lastName: e.target.value})} placeholder="Lastname"/>
+        <button  onClick={this.addPlayer}>Add</button>
+        {players}
       </div>
     )
   }
@@ -138,3 +103,18 @@ export default App;
 
 
 
+      // <div className="container">
+      //   <div className="main img-fluid">
+      //       <div className="header">
+      //         <input type="text" ref="Fi" onChange={(e) => this.setState({firstName: e.target.value})} placeholder="Firstname"/>
+      //         <input type="text" ref="firstName" onChange={(e) => this.setState({lastName: e.target.value})} placeholder="Lastname"/>
+      //         {
+      //           this.state.data.length === 0 
+      //           ? 
+      //           <button  onClick={this.addPlayer} disabled>Add</button>
+      //           : <button  onClick={this.addPlayer}>Add</button>
+      //         }
+      //       </div>
+      //       {playersStats}
+      //   </div>
+      // </div>

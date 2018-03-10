@@ -4,7 +4,7 @@ const axios = require('axios');
 const cors = require('cors');
 const pc = require('./controllers/Player_Controller');
 
-const PORT = 3000;
+const PORT = 3005;
 const app = express();
 
 // app.use(express.static(__dirname + '/public'))
