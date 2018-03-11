@@ -1,0 +1,16 @@
+.header {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(111,38,51);
+    padding: 10px 50px;
+} 
+
+h1 {
+    background-color: rgb(255,184,28);
+    margin: 0;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}

@@ -9,7 +9,7 @@
     background-size: cover;
 }
 
-.container {
+/* .container {
   padding: 0;
   margin: 0;
 }
@@ -24,7 +24,3 @@
 
 
  */
- .header {
-  display: flex;
-  justify-content: flex-end;
-}

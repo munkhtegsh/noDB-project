@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios';
 import _ from 'underscore';
 import Player from './controllers/Player';
-import Api_Handler from './controllers/Api_Handler';
+import Header from './controllers/Header';
 
 class App extends Component {
   constructor() {
@@ -19,18 +19,21 @@ class App extends Component {
     this.addPlayer = this.addPlayer.bind(this);
     this.updatePlayer = this.updatePlayer.bind(this);
     this.removePlayer = this.removePlayer.bind(this);
+    this.changeInput = this.changeInput.bind(this);
   }
 
-  componentDidMount() {
-    Api_Handler.get().then((players) => {
-      this.setState({ players })
-    });
+  changeInput(value, name) {
+    this.setState({ 
+      [name]: value
+     });
+  } 
 
-      // axios.get(`${this.state.localURL}`)
-      // .then(( result ) => {
-      //   let players = result.data;
-      //   this.setState({ players })
-      // });
+  componentDidMount() {
+      axios.get(`${this.state.localURL}`)
+      .then(( result ) => {
+        let players = result.data;
+        this.setState({ players })
+      });
   }
 
   addPlayer() {    
@@ -59,28 +62,26 @@ class App extends Component {
       .then((res) => {
         let players = res.data;
         this.setState({ players })
-      })
+      });
   }
 
   render() {
-    let players = this.state.players.map(( player, i ) => {
+    this.state.players.map((player, i) => {
       return (
-        <Player img={ player.img }
-                name={ player.name }
-                updatePlayer={ this.updatePlayer }
-                removePlayer={ this.removePlayer }
-                id={ player.id }
-        />
+        <div>
+          <Player name={player.name} />
+        </div>
       )
-    })
-    console.log(this.state.players)
+    });
 
     return (
       <div>
-        <input type="text" onChange={(e) => this.setState({firstName: e.target.value})} placeholder="Firstname"/>
-        <input type="text" onChange={(e) => this.setState({lastName: e.target.value})} placeholder="Lastname"/>
-        <button  onClick={this.addPlayer}>Add</button>
-        {players}
+        <Header changeInput={this.changeInput} addPlayer={this.addPlayer}/>
+        <Player 
+          players={this.state.players}
+          updatePlayer={ this.updatePlayer } 
+          removePlayer={ this.removePlayer }
+        />
       </div>
     )
   }
