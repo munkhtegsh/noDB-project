@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 import _ from 'underscore';
-import Player from './controllers/Player';
+import List from './controllers/List';
 import Header from './controllers/Header';
 
 class App extends Component {
@@ -66,22 +66,16 @@ class App extends Component {
   }
 
   render() {
-    this.state.players.map((player, i) => {
-      return (
-        <div>
-          <Player name={player.name} />
-        </div>
-      )
-    });
-
     return (
       <div>
         <Header changeInput={this.changeInput} addPlayer={this.addPlayer}/>
-        <Player 
-          players={this.state.players}
+        <List 
+          players={this.state.players }
           updatePlayer={ this.updatePlayer } 
           removePlayer={ this.removePlayer }
         />
+
+
       </div>
     )
   }
