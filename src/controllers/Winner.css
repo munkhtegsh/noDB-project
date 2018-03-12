@@ -1,0 +1,32 @@
+.winner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 100vh;
+    
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px
+}
+
+button {
+    float: right;
+}
+
+h3 {
+    color:rgb(53, 48, 40);
+    margin: 10px
+}

@@ -1,42 +1,52 @@
 const axios = require('axios');
-const playerList = require('../data');
+const PLAYER_LIST_API = require('../data');
 
-// let API = 'https://nba-players.herokuapp.com/players-stats';
+
 let API_PIC = 'https://nba-players.herokuapp.com/players';
-let players = [];
+let players = [{
+    id: 0,
+    name: "LeBron James",
+    team: "Cavalers",
+    points_per_game: "26.8",
+    rebounds_per_game: "7.9",
+    img: "https://nba-players.herokuapp.com/players/James/Lebron"
+  }];
 let id = 0;
 
 module.exports = {
     create: (req, res, next) => {
-        let { firstName, lastName } = req.body;
-        // firstName = firstName.toLowerCase();
-        // lastName = lastName.toLowerCase();
-        // console.log(firstName, lastName)
-        axios.get(`${API}/${lastName}/${firstName}`)
-            .then((result) => {
-                let player = {
-                    id,
-                    name: result.data.name,
-                    team: result.data.team_name,
-                    points_per_game: result.data.points_per_game,
-                    rebounds_per_game: result.data.rebounds_per_game,
-                    img: `${API_PIC}/${lastName}/${firstName}`
-                };
-                id++;
-                players.push(player)
-                res.status(200).send(players);
-            });
-    },
+        //name, team, points_per_game, rebounds_per_game 
+        let { firstName, lastName} = req.body;
+        let player = PLAYER_LIST_API.players.filter((player, i) => {
+            let fullName = player.name.toLocaleLowerCase();
+            let name = firstName.toLocaleLowerCase();
+            if (fullName.includes(name)) {
+                return player;
+            }
+        });
 
+        id++;
+        let { name, team, points_per_game, rebounds_per_game } = player[0];
+        let stats = {
+            id,
+            name,
+            team,
+            points_per_game,
+            rebounds_per_game,
+            img: `${API_PIC}/${lastName}/${firstName}`
+        };
+        players.push(stats);
+        res.status(200).send(players);
+    },
+    //only getting info from player []
     read: (req, res, next) => {
-        res.status(200).send(playerList.players);
-        // res.status(200).send(players)
+        res.status(200).send(players);
     },
 
     update: (req, res, next) => {
         players.forEach((player, i) => {
             if (+req.params.id === player.id) {
-                player.name = req.body.name || player.team;
+                player.name = req.body.name || player.name;
                 player.team = req.body.team_name || player.team,
                 player.points_per_game = req.body.points_per_game || player.points_per_game,
                 player.rebounds_per_game = req.body.rebounds_per_game || player.rebounds_per_game
@@ -52,5 +62,32 @@ module.exports = {
             }
         });
         res.status(200).send(players);
+    },
+
+    filterByPointPerGame: (req, res, next) => {
+        let { points_per_game } = req.query; //when you call query => req.query !!!
+        let filterByPointsPerGame = players.filter((player, i) => {
+            if (+points_per_game < player.points_per_game) {
+                return true;
+            } else if (typeof player.points_per_game === 'string') {
+                return true;
+            }
+        });
+        res.status(200).send(filterByPointsPerGame);
+    },
+
+    filterByReboundsPerGame: (req, res, next) => {
+        let { rebounds_per_game} = req.query; //when you call query => req.query !!!
+        let filterByReboundsPerGame = players.filter((player, i) => {
+            if (+rebounds_per_game < player.rebounds_per_game) {
+                return true;
+            }
+        });
+        res.status(200).send(filterByReboundsPerGame);
     }
 };
+//have an arr
+    //filter it when pointPerGame < player.points_per_game 
+        //if 
+
+

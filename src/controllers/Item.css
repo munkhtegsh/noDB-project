@@ -1,0 +1,45 @@
+.wrapper {
+    box-sizing: border-box;
+    padding: 10px;
+    width: 25%;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color:white;
+    opacity: 0.9;
+    margin: 5px;
+}
+
+.item-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+img {
+    width: 60%;
+}
+
+h2 {
+    background-color: rgb(255,184,28);
+    margin: 0;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    font-size: 1.4vw;
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: 2px solid rgb(255,184,28);
+    border-radius: 5px;
+}
+
+
+
+
