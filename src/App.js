@@ -4,22 +4,36 @@ import axios from 'axios';
 import _ from 'underscore';
 import List from './controllers/List';
 import Header from './controllers/Header';
+import TEAM_STEPHEN_DATA from './stephen_data';
+import Winner from './controllers/Winner';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       id: 0,
+      stephen_team: [{
+        "id": 0,
+        "name": "Stephen Curry",
+        "points_per_game": "8.6",
+        "rebounds_per_game": "5.6",
+        "img": "https://nba-players.herokuapp.com/players/curry/stephen"
+      }],
       players: [],   
       firstName: '',
       lastName: '',
       localURL: 'http://localhost:3005/api/players',
-      img: 'https://nba-players.herokuapp.com/players'
+      img: 'https://nba-players.herokuapp.com/players',
+      winner: '',
+      lebronTeamScore: 0,
+      stephenTeamScore: 0
     };
     this.addPlayer = this.addPlayer.bind(this);
     this.updatePlayer = this.updatePlayer.bind(this);
     this.removePlayer = this.removePlayer.bind(this);
     this.changeInput = this.changeInput.bind(this);
+    this.createRandomPlayers = this.createRandomPlayers.bind(this);
+    this.refreshPage = this.refreshPage.bind(this);
   }
 
   changeInput(value, name) {
@@ -37,16 +51,18 @@ class App extends Component {
   }
 
   addPlayer() {    
-    let firstName = this.state.firstName;
-    let lastName = this.state.lastName;
-    axios.post(`${this.state.localURL}`, {
-      firstName,
-      lastName
-    })
-      .then((res) => {
-        let players = res.data;
-        this.setState({ players });
-      });
+    if (this.state.players.length <= 4) { //why length is not 5???
+      let firstName = this.state.firstName;
+      let lastName = this.state.lastName;
+      axios.post(`${this.state.localURL}`, {
+        firstName,
+        lastName
+      })
+        .then((res) => {
+          let players = res.data;
+          this.setState({ players });
+        });
+    }
   }
 
   updatePlayer( id, playerInfo ) {
@@ -65,17 +81,73 @@ class App extends Component {
       });
   }
 
+  createRandomPlayers() {
+    let stephen_team = this.state.stephen_team.slice(0);
+    let randomNumContainer = [];
+    TEAM_STEPHEN_DATA.players.forEach((player, i) => {
+      let randomPlayer = Math.floor(Math.random() * (11 - 1) + 0);
+      if (randomNumContainer.length !== 4 && randomNumContainer.indexOf(randomPlayer) === -1) {
+      randomNumContainer.push(randomPlayer);
+      stephen_team.push(TEAM_STEPHEN_DATA.players[randomPlayer]);
+      }
+      this.setState({
+        stephen_team
+      });
+    });
+
+    let getWinner = () => {
+      if (this.state.players.length === 5 && this.state.stephen_team.length === 5) {
+        let avgLebronTeam = _.reduce(this.state.players, (memo, num) => {
+          return memo + (parseInt(num.rebounds_per_game, 10) + parseInt(num.points_per_game, 10));
+        }, 0);
+  
+        let avgStephenTeam = _.reduce(this.state.stephen_team, (memo, num) => {
+          return memo + (parseInt(num.rebounds_per_game, 10) + parseInt(num.points_per_game,10));
+        }, 0);
+        console.log(avgLebronTeam, avgStephenTeam)
+
+        let winner = 'TEAM LEBRON';
+        let lebronTeamScore = avgLebronTeam;
+        let stephenTeamScore = avgStephenTeam;
+        avgLebronTeam > avgStephenTeam ? winner : winner = 'TEAM STEPHEN';
+        this.setState({ winner, lebronTeamScore, stephenTeamScore });
+      }
+    }
+
+    _.delay(getWinner, 4000);
+  }
+
+  refreshPage() {
+    let players = this.state.players[0];
+    console.log(players)
+
+    this.setState({players});
+  }
+
   render() {
     return (
       <div>
-        <Header changeInput={this.changeInput} addPlayer={this.addPlayer}/>
-        <List 
-          players={this.state.players }
-          updatePlayer={ this.updatePlayer } 
-          removePlayer={ this.removePlayer }
-        />
-
-
+           {
+             !this.state.winner
+             ? 
+               <div>
+                <Header changeInput={this.changeInput} addPlayer={this.addPlayer}/>
+                <List 
+                 players={this.state.players }
+                 updatePlayer={ this.updatePlayer } 
+                 removePlayer={ this.removePlayer }
+     
+                 stephen_team={ this.state.stephen_team }
+                 createRandomPlayers={ this.createRandomPlayers }
+               />
+              </div>
+             :
+               <Winner winner={this.state.winner}
+                        lebronTeamScore={this.state.lebronTeamScore}
+                        stephenTeamScore={this.state.stephenTeamScore}
+                        onSubmit={this.refreshPage}
+               />
+           }
       </div>
     )
   }

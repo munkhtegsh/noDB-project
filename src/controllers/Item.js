@@ -34,7 +34,7 @@ export default class Item extends Component {
     render() {
         return (
             <div className="item">
-                <img src={this.props.img} width="200" alt="player image"/>
+                <img src={this.props.img}  alt="player image"/>
                 <input type="text" name="name" value={this.state.name} onChange={(e) => this.updateInfo(e.target.value, e.target.name)}/>
                 <div className="item-buttons">
                 <button onClick={this.updateStats}>Update</button>

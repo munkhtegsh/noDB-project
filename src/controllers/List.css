@@ -1,8 +1,37 @@
-.list{
+.teams{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+}
+
+.team-lebron{
     width: 50%;
     height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.team-stephen{
+    width: 50%;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.start-game {
+    color: wheat;
+    background-color: #061922;
+}
+
+.team-stephen > button {
+    background-color: red
 }

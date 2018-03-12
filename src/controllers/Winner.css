@@ -1,0 +1,19 @@
+.winner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 100vh;
+}
+
+.stats {
+    float: right;
+}
+
+button {
+    float: right;
+}
+
+h3 {
+    color:rgb(53, 48, 40)
+}
