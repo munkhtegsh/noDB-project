@@ -1,6 +1,7 @@
 const axios = require('axios');
 const PLAYER_LIST_API = require('../data');
 
+
 let API_PIC = 'https://nba-players.herokuapp.com/players';
 let players = [{
     id: 0,
