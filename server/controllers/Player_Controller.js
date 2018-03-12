@@ -61,5 +61,32 @@ module.exports = {
             }
         });
         res.status(200).send(players);
+    },
+
+    filterByPointPerGame: (req, res, next) => {
+        let { points_per_game } = req.query; //when you call query => req.query !!!
+        let filterByPointsPerGame = players.filter((player, i) => {
+            if (+points_per_game < player.points_per_game) {
+                return true;
+            } else if (typeof player.points_per_game === 'string') {
+                return true;
+            }
+        });
+        res.status(200).send(filterByPointsPerGame);
+    },
+
+    filterByReboundsPerGame: (req, res, next) => {
+        let { rebounds_per_game} = req.query; //when you call query => req.query !!!
+        let filterByReboundsPerGame = players.filter((player, i) => {
+            if (+rebounds_per_game < player.rebounds_per_game) {
+                return true;
+            }
+        });
+        res.status(200).send(filterByReboundsPerGame);
     }
 };
+//have an arr
+    //filter it when pointPerGame < player.points_per_game 
+        //if 
+
+

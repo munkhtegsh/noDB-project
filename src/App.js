@@ -26,14 +26,18 @@ class App extends Component {
       img: 'https://nba-players.herokuapp.com/players',
       winner: '',
       lebronTeamScore: 0,
-      stephenTeamScore: 0
+      stephenTeamScore: 0,
+      sortBy: '',
+      sortURL: 'http://localhost:3005/api/points'
     };
+
     this.addPlayer = this.addPlayer.bind(this);
     this.updatePlayer = this.updatePlayer.bind(this);
     this.removePlayer = this.removePlayer.bind(this);
     this.changeInput = this.changeInput.bind(this);
     this.createRandomPlayers = this.createRandomPlayers.bind(this);
     this.refreshPage = this.refreshPage.bind(this);
+    this.sortBy = this.sortBy.bind(this);
   }
 
   changeInput(value, name) {
@@ -60,7 +64,7 @@ class App extends Component {
       })
         .then((res) => {
           let players = res.data;
-          this.setState({ players });
+          this.setState({ players, firstName: '', lastName: '' }); //why is state not cleared out
         });
     }
   }
@@ -119,9 +123,19 @@ class App extends Component {
 
   refreshPage() {
     let players = this.state.players[0];
-    console.log(players)
-
     this.setState({players});
+  }
+
+  sortBy(e) {
+    let sortBy = parseInt(e.target.value, 10);
+      axios.get(`${this.state.sortURL}/?points_per_game=${sortBy}`)
+        .then((res) => {
+          let players = res.data.sort((a, b) => b.points_per_game - a.points_per_game);
+          this.setState({
+            players,
+            sortBy 
+          })
+        })
   }
 
   render() {
@@ -139,7 +153,9 @@ class App extends Component {
      
                  stephen_team={ this.state.stephen_team }
                  createRandomPlayers={ this.createRandomPlayers }
+                 sortBy = { this.state.sortBy }
                />
+
               </div>
              :
                <Winner winner={this.state.winner}
@@ -148,6 +164,9 @@ class App extends Component {
                         onSubmit={this.refreshPage}
                />
            }
+              <input style={{backgroundColor: "black", color: "white", float: "right", fontWeight:"bold", position: "absolute", right:"20px", bottom:"30px"}} 
+               type="number" placeholder="Sort by points" 
+              onChange={ this.sortBy }/>
       </div>
     )
   }
@@ -155,8 +174,7 @@ class App extends Component {
 
 export default App;
 
-//private key - 87a62f921a4b37b56a6b99c1a651da89ee7bad2b
-//public key - 8877f965d7510b2815fab7b05cd3a880
+
 
 //1 stateful component which keep track of ...
 //2. at least one stateless component show info to user

@@ -1,0 +1,23 @@
+.stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.stats > .item {
+    width: 20%;
+}
+
+p {
+    font-weight: 300;
+    margin: 0;
+}
+
+span {
+    font-weight: 600
+}
+
+h3 {
+    margin: 0;
+}

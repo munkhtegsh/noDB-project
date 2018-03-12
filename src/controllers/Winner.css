@@ -4,10 +4,22 @@
     align-items: center;
     background-color: white;
     height: 100vh;
+    
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column
 }
 
 .stats {
-    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px
 }
 
 button {
@@ -15,5 +27,6 @@ button {
 }
 
 h3 {
-    color:rgb(53, 48, 40)
+    color:rgb(53, 48, 40);
+    margin: 10px
 }
